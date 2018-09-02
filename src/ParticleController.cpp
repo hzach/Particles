@@ -9,7 +9,7 @@ using namespace ci::app;
 
 ParticleController::ParticleController(Channel32f channel) :
   mChannel(std::move(channel)),
-  mSpacing(4)
+  mSpacing(10)
 {
   mXRes = getWindowWidth() / mSpacing;
   mYRes = getWindowHeight() / mSpacing;

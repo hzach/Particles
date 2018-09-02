@@ -11,7 +11,7 @@ class ParticleController {
     public:
         ParticleController() = default;
 
-        ParticleController(Channel32f channel);
+        explicit ParticleController(Channel32f channel);
 
         /**
         * makes changes to the controller state.

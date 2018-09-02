@@ -12,12 +12,13 @@ class Particle {
 
   private:
     cinder::vec2 mLoc;
+
     vec2 mDir;
     float mVel;
     float mRad;
     float mScale;
     Colorf mColor;
-    vec2 dirToCursor;
+    vec2 mDirToCursor;
     const float mRad_initial;
 };
 

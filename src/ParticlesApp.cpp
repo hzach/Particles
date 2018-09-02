@@ -45,7 +45,7 @@ void prepareSettings( ParticleApp::Settings* settings )
 
 void ParticleApp::setup()
 {
-    mChannel = Channel32f(loadImage(loadAsset("../assets/forest1.png")));
+    mChannel = Channel32f(loadImage(loadAsset("../assets/forest4.png")));
     mParticleController = ParticleController(mChannel);
     mParticleController.addParticles_lattice();
 }

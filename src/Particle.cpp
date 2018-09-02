@@ -6,7 +6,7 @@
 using namespace ci;
 
 Particle::Particle(vec2 loc) :
-    mRad_initial(1.0f),
+    mRad_initial(5.0f),
     mScale(7.0f)
 {
   mLoc = loc;
@@ -17,19 +17,24 @@ Particle::Particle(vec2 loc) :
 
 
 void Particle::update(const Channel32f &channel, const vec2 &mouseLoc) {
-    float grey = channel.getValue(mLoc);
+    vec2 dirToCursor = mouseLoc - mLoc;
+    float time = float(app::getElapsedSeconds()) * 4.0f;
+    float dist = length(dirToCursor) * 0.05f;
+    float sin_offset = 50.0f * sinf(0.20f * (dist - time));
 
-    dirToCursor = normalize(mouseLoc - mLoc);
-    mColor = Color(grey, grey, grey);
-    mRad = channel.getValue(mLoc) * 7.0f;
+    mDirToCursor = normalize(mouseLoc - mLoc);
+    vec2 loc_offset = mLoc + mDirToCursor * sin_offset;
+
+    loc_offset.x = constrain(loc_offset.x, 0.0f, channel.getWidth() - 1.0f);
+    loc_offset.y = constrain(loc_offset.y, 0.0f, channel.getHeight() - 1.0f);
+
+    mRad = channel.getValue(loc_offset) * mRad_initial;
+    mDirToCursor *= sin_offset * 15.0f;
 
 }
 
 
 
 void Particle::draw() {
-    Rectf rect(mLoc.x, mLoc.y, mLoc.x + mRad, mLoc.y + mRad);
-
-    gl::color(mColor);
-    gl::drawSolidRect(rect);
+    gl::drawSolidCircle(mLoc, mRad);
 }
