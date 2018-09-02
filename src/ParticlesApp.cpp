@@ -17,6 +17,9 @@ const int WIDTH  = 896;
 class ParticleApp : public App {
   public:
     Channel32f mChannel;
+
+    bool mIsPressed = false;
+
     // Cinder will call 'draw' each time the contents of the window need to be redrawn.
     void draw() override;
 
@@ -24,12 +27,14 @@ class ParticleApp : public App {
 
     void update() override;
 
-    void mouseMove(MouseEvent event) override;
+    void mouseUp(MouseEvent event) override;
+
+    void mouseDrag(MouseEvent event) override;
+
 
   private:
     ParticleController mParticleController;
-    vec2  mMouseLoc;
-    int mParticleCount = 50;
+    vec2 mMouseLoc;
 };
 
 
@@ -47,7 +52,6 @@ void ParticleApp::setup()
 {
     mChannel = Channel32f(loadImage(loadAsset("../assets/forest4.png")));
     mParticleController = ParticleController(mChannel);
-    mParticleController.addParticles_lattice();
 }
 
 
@@ -60,16 +64,28 @@ void ParticleApp::draw()
     mParticleController.draw();
 }
 
+
+
 void ParticleApp::update() {
-  mParticleController.update(mMouseLoc);
+    if (mIsPressed) {
+        mParticleController.addParticles(5, mMouseLoc);
+        mParticleController.update(mMouseLoc);
+    }
 }
 
 
-void ParticleApp::mouseMove(MouseEvent event) {
+
+void ParticleApp::mouseUp(MouseEvent event) {
+    std::cout << "Mouse up" << std::endl;
+    mIsPressed = false;
+}
+
+
+
+void ParticleApp::mouseDrag(MouseEvent event) {
     mMouseLoc = event.getPos();
-
+    mIsPressed = true;
 }
-
 
 
 // This line tells Cinder to actually create and run the application.

@@ -23,25 +23,15 @@ class ParticleController {
         */
         void draw();
 
-        /**
-        * Adds the amount of particles equal to the parameter amount to this controller.
-        *
-        * @param int amt the amount of particles to add
-        */
-        void addParticles_random(int amt);
 
         /**
-        * Adds a Particle centered around each lattice point (x_i, y_i) in [0,..,mXRes] X [0,..,mYRes]
-        *
-        */
-        void addParticles_lattice();
+         * Draws zero or many particles at some location on the canvas
+         *
+         * @param amt the amount of particles to draw.
+         * @param loc the location on the canvas
+         */
+        void addParticles(uint amt, const vec2 &loc);
 
-        /**
-        * Removes some amount of particles from this controller.
-        *
-        * @param int amt the amount of particles to remove.
-        */
-        void removeParticles(int amt);
 
     private:
 
@@ -58,20 +48,14 @@ class ParticleController {
         */
         std::list<Particle> mParticles;
 
+        /**
+         * Adds a single particle to mParticles with a starting position at (x_i, y_i)
+         *
+         * @param int x_i the x-coordinate of the starting position
+         * @param int y_1 the y-coordinate of the starting position
+         */
+        void addParticle(float x_i, float y_i);
 
-/**
- * Adds a single particle to mParticles with a random starting position
- */
-void addParticle();
-
-
-/**
- * Adds a single particle to mParticles with a starting position at (x_i, y_i)
- *
- * @param int x_i the x-coordinate of the starting position
- * @param int y_1 the y-coordinate of the starting position
- */
-void addParticle(int x_i, int y_i);
 };
 
 

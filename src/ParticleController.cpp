@@ -9,7 +9,8 @@ using namespace ci::app;
 
 ParticleController::ParticleController(Channel32f channel) :
   mChannel(std::move(channel)),
-  mSpacing(10)
+  mSpacing(1)
+
 {
   mXRes = getWindowWidth() / mSpacing;
   mYRes = getWindowHeight() / mSpacing;
@@ -34,51 +35,25 @@ void ParticleController::update(const vec2 mouseLoc) {
   it = mParticles.begin();
 
   while (it != mParticles.end()) {
-    it -> update(mChannel, mouseLoc);
+    it->update(mChannel, mouseLoc);
     ++it;
   }
 }
 
 
-
-void ParticleController::addParticles_random(int amt) {
-  for (int i = 0; i < amt; i++) {
-    addParticle();
-  }
-}
-
-
-
-void ParticleController::addParticles_lattice() {
-  for (int x = 0; x < mXRes; x++) {
-    for (int y = 0; y < mYRes; y++) {
-      addParticle(x, y);
+void ParticleController::addParticles(uint amt, const vec2 &loc) {
+    for (int i = 0; i < amt; i++) {
+        vec2 randVec = Rand::randVec2() * 10.0f;
+        mParticles.emplace_back(Particle(randVec + loc));
+        addParticle(loc.x, loc.y);
     }
-  }
 }
 
 
 
-void ParticleController::addParticle() {
-  float xcoord = Rand::randFloat(getWindowWidth());
-  float ycoord = Rand::randFloat(getWindowHeight());
-  
-  mParticles.emplace_back(Particle(vec2(xcoord, ycoord)));
-}
-
-
-
-void ParticleController::addParticle(int x_i, int y_i) {
+void ParticleController::addParticle(float x_i, float y_i) {
   float x_coord = (x_i + 0.5f) * mSpacing;
   float y_coord = (y_i + 0.5f) * mSpacing;
 
   mParticles.emplace_back(Particle(vec2(x_coord, y_coord)));
-}
-
-
-
-void ParticleController::removeParticles(int amt) {
-  for (int i = 0; i < amt; i++) {
-    mParticles.pop_back();
-  }
 }
