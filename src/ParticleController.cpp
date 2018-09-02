@@ -7,15 +7,12 @@ using namespace ci;
 using namespace ci::app;
 
 
-ParticleController::ParticleController() {}
-
-
-ParticleController::ParticleController(int xRes, int yRes, int spacing, const Channel32f &channel) {
-  mXRes = xRes;
-  mYRes = yRes;
-  mSpacing = spacing;
-  mChannel = channel;
-
+ParticleController::ParticleController(Channel32f channel) :
+  mChannel(std::move(channel)),
+  mSpacing(4)
+{
+  mXRes = getWindowWidth() / mSpacing;
+  mYRes = getWindowHeight() / mSpacing;
 }
 
 
@@ -66,7 +63,7 @@ void ParticleController::addParticle() {
   float xcoord = Rand::randFloat(getWindowWidth());
   float ycoord = Rand::randFloat(getWindowHeight());
   
-  mParticles.push_back(Particle(vec2(xcoord, ycoord)));
+  mParticles.emplace_back(Particle(vec2(xcoord, ycoord)));
 }
 
 
@@ -75,7 +72,7 @@ void ParticleController::addParticle(int x_i, int y_i) {
   float x_coord = (x_i + 0.5f) * mSpacing;
   float y_coord = (y_i + 0.5f) * mSpacing;
 
-  mParticles.push_back(Particle(vec2(x_coord, y_coord)));
+  mParticles.emplace_back(Particle(vec2(x_coord, y_coord)));
 }
 
 

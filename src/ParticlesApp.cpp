@@ -8,8 +8,8 @@
 using namespace ci;
 using namespace ci::app;
 
-const int HEIGHT = 1512;
-const int WIDTH  = 2016;
+const int HEIGHT = 1600;
+const int WIDTH  = 896;
 
 
 
@@ -45,8 +45,8 @@ void prepareSettings( ParticleApp::Settings* settings )
 
 void ParticleApp::setup()
 {
-    mChannel = Channel32f(loadImage(loadAsset("../assets/hand.jpg")));
-    mParticleController = ParticleController(getWindowWidth()/80, getWindowHeight()/80, 80, mChannel);
+    mChannel = Channel32f(loadImage(loadAsset("../assets/forest1.png")));
+    mParticleController = ParticleController(mChannel);
     mParticleController.addParticles_lattice();
 }
 

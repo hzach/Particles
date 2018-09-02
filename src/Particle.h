@@ -6,7 +6,7 @@ using namespace ci;
 
 class Particle {
   public:
-    Particle(vec2 loc);
+    explicit Particle(vec2 loc);
     void draw();
     void update(const Channel32f &channel, const vec2 &mouseLoc);
 
@@ -15,6 +15,7 @@ class Particle {
     vec2 mDir;
     float mVel;
     float mRad;
+    float mScale;
     Colorf mColor;
     vec2 dirToCursor;
     const float mRad_initial;
