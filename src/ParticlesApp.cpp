@@ -69,8 +69,8 @@ void ParticleApp::draw()
 void ParticleApp::update() {
     if (mIsPressed) {
         mParticleController.addParticles(5, mMouseLoc);
-        mParticleController.update(mMouseLoc);
     }
+    mParticleController.update(mMouseLoc);
 }
 
 

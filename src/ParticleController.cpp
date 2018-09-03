@@ -35,8 +35,12 @@ void ParticleController::update(const vec2 mouseLoc) {
   it = mParticles.begin();
 
   while (it != mParticles.end()) {
-    it->update(mChannel, mouseLoc);
-    ++it;
+      if (it->mIsDead) {
+          it = mParticles.erase(it);
+      } else {
+          it->update(mChannel, mouseLoc);
+          ++it;
+      }
   }
 }
 
