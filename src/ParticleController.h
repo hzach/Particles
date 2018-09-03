@@ -35,10 +35,6 @@ class ParticleController {
 
     private:
 
-        int mXRes;
-
-        int mYRes;
-
         int mSpacing;
 
         Channel32f mChannel;
@@ -47,15 +43,6 @@ class ParticleController {
         * This list of Particles managed by this controller.
         */
         std::list<Particle> mParticles;
-
-        /**
-         * Adds a single particle to mParticles with a starting position at (x_i, y_i)
-         *
-         * @param int x_i the x-coordinate of the starting position
-         * @param int y_1 the y-coordinate of the starting position
-         */
-        void addParticle(float x_i, float y_i, const vec2 &vel);
-
 };
 
 
