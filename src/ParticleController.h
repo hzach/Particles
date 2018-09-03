@@ -30,7 +30,7 @@ class ParticleController {
          * @param amt the amount of particles to draw.
          * @param loc the location on the canvas
          */
-        void addParticles(uint amt, const vec2 &loc);
+        void addParticles(uint amt, const vec2 &loc, const vec2 &vel);
 
 
     private:
@@ -54,7 +54,7 @@ class ParticleController {
          * @param int x_i the x-coordinate of the starting position
          * @param int y_1 the y-coordinate of the starting position
          */
-        void addParticle(float x_i, float y_i);
+        void addParticle(float x_i, float y_i, const vec2 &vel);
 
 };
 

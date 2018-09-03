@@ -6,7 +6,7 @@ using namespace ci;
 
 class Particle {
   public:
-    explicit Particle(vec2 loc);
+    Particle(vec2 loc, vec2 vel);
     void draw();
     void update(const Channel32f &channel, const vec2 &mouseLoc);
     bool mIsDead;

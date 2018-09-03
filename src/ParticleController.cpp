@@ -45,19 +45,19 @@ void ParticleController::update(const vec2 mouseLoc) {
 }
 
 
-void ParticleController::addParticles(uint amt, const vec2 &loc) {
+void ParticleController::addParticles(uint amt, const vec2 &loc, const vec2 &vel) {
     for (int i = 0; i < amt; i++) {
-        vec2 randVec = Rand::randVec2() * 10.0f;
-        mParticles.emplace_back(Particle(randVec + loc));
-        addParticle(loc.x, loc.y);
+        vec2 randVec = Rand::randVec2() * 0.25f;
+        vec2 vel_offset = Rand::randVec2() * Rand::randFloat(1.0f, 3.0f);
+        mParticles.emplace_back(Particle(randVec + loc, vel + vel_offset));
     }
 }
 
 
 
-void ParticleController::addParticle(float x_i, float y_i) {
+void ParticleController::addParticle(float x_i, float y_i, const vec2 &vel) {
   float x_coord = (x_i + 0.5f) * mSpacing;
   float y_coord = (y_i + 0.5f) * mSpacing;
 
-  mParticles.emplace_back(Particle(vec2(x_coord, y_coord)));
+  mParticles.emplace_back(Particle(vec2(x_coord, y_coord), vel));
 }

@@ -17,7 +17,8 @@ const int WIDTH  = 896;
 class ParticleApp : public App {
   public:
     Channel32f mChannel;
-
+    vec2 mMouseLoc;
+    vec2 mPrevMouseLoc;
     bool mIsPressed = false;
 
     // Cinder will call 'draw' each time the contents of the window need to be redrawn.
@@ -29,12 +30,15 @@ class ParticleApp : public App {
 
     void mouseUp(MouseEvent event) override;
 
+    void mouseMove(MouseEvent event) override;
+
     void mouseDrag(MouseEvent event) override;
 
 
   private:
     ParticleController mParticleController;
-    vec2 mMouseLoc;
+
+    void updateLocation(const vec2 &newLoc);
 };
 
 
@@ -67,24 +71,39 @@ void ParticleApp::draw()
 
 
 void ParticleApp::update() {
+
     if (mIsPressed) {
-        mParticleController.addParticles(5, mMouseLoc);
+        // calculate the mouse's velocity
+        vec2 mouse_vel = length(mMouseLoc) == 0 ? mPrevMouseLoc : mMouseLoc - mPrevMouseLoc;
+        mParticleController.addParticles(5, mMouseLoc, mouse_vel);
     }
     mParticleController.update(mMouseLoc);
 }
 
 
 
+void ParticleApp::mouseMove(MouseEvent event) {
+    updateLocation(event.getPos());
+}
+
+
+
 void ParticleApp::mouseUp(MouseEvent event) {
-    std::cout << "Mouse up" << std::endl;
     mIsPressed = false;
 }
 
 
 
 void ParticleApp::mouseDrag(MouseEvent event) {
-    mMouseLoc = event.getPos();
     mIsPressed = true;
+    updateLocation(event.getPos());
+}
+
+
+
+void ParticleApp::updateLocation(const vec2 &newLoc) {
+    mPrevMouseLoc = mMouseLoc;
+    mMouseLoc = newLoc;
 }
 
 

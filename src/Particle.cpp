@@ -5,15 +5,15 @@
 
 using namespace ci;
 
-Particle::Particle(vec2 loc) :
+Particle::Particle(vec2 loc, vec2 vel) :
     mRad_initial(5.0f),
     mScale(7.0f),
-    mDecay(0.99f),
+    mDecay(Rand::randFloat(0.95f, .99f)),
+    mVel(vel),
     mAge(0)
 {
   mLoc = loc;
   mDir = Rand::randVec2();
-  mVel = Rand::randVec2();
   mRad = mRad_initial;
 }
 
