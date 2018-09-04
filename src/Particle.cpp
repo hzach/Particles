@@ -1,3 +1,4 @@
+#include <cinder/Perlin.h>
 #include "cinder/app/App.h"
 #include "cinder/Rand.h"
 #include "cinder/gl/gl.h"
@@ -5,10 +6,11 @@
 
 using namespace ci;
 
+
 Particle::Particle(vec2 loc, vec2 vel) :
     mRad_initial(5.0f),
     mScale(7.0f),
-    mDecay(Rand::randFloat(0.95f, .99f)),
+    mDecay(Rand::randFloat(0.15f, .19f)),
     mVel(vel),
     mAge(0)
 {
@@ -18,34 +20,28 @@ Particle::Particle(vec2 loc, vec2 vel) :
 }
 
 
-void Particle::update(const Channel32f &channel, const vec2 &mouseLoc) {
+void Particle::update(const Channel32f &channel, const vec2 &mouseLoc, const Perlin &perlin) {
     // check that the particle is still alive
     mIsDead = mAge >= mLifespan;
     mAge++;
 
+    float noise = current_noise_value(perlin);
+    vec2 dirToCursor = mouseLoc - mLoc;
+    mDirToCursor = normalize(dirToCursor);
+
+    Distortion offsets = distort(
+            mouseLoc,
+            dirToCursor,
+            noise,
+            vec2(channel.getWidth() - 1.0f, channel.getHeight() - 1.0f)
+    );
+
     // update location with the particles velocity
     mLoc += mVel;
-    mVel *= mDecay;
-
-    // distortion logic
-    vec2 dirToCursor = mouseLoc - mLoc;
-    // time and distance used to attenuate the wave motion
-    float time = float(app::getElapsedSeconds()) * 4.0f;
-    float dist = length(dirToCursor) * 0.05f;
-    float sin_offset = 50.0f * sinf(0.20f * (dist - time));
-
-    // calculate an offset to get the channel value in a neighborhood around the particle location, which
-    // will result in a distorted image
-    mDirToCursor = normalize(mouseLoc - mLoc);
-    vec2 loc_offset = mLoc + mDirToCursor * sin_offset;
-
-    // constraint the offsets to the canvas
-    loc_offset.x = constrain(loc_offset.x, 0.0f, channel.getWidth() - 1.0f);
-    loc_offset.y = constrain(loc_offset.y, 0.0f, channel.getHeight() - 1.0f);
+    mVel += offsets.perlin_offset * mDecay;
 
     // apply the distortion and attenuate by the age of the Particle
-    mRad = channel.getValue(mLoc) * mRad_initial * (1.0f - mAge/(float)mLifespan);
-    mDirToCursor *= sin_offset * 15.0f;
+    mRad = channel.getValue(offsets.loc_offset) * mRad_initial * (1.0f - mAge/(float)mLifespan);
 
 }
 
@@ -53,4 +49,42 @@ void Particle::update(const Channel32f &channel, const vec2 &mouseLoc) {
 
 void Particle::draw() {
     gl::drawSolidCircle(mLoc, mRad);
+}
+
+
+float Particle::current_noise_value(const Perlin &perlin) {
+    // get perlin noise value for the current location and time
+    float nX = mLoc.x * 0.005f;
+    float nY = mLoc.y * 0.005f;
+    float nZ = (float)app::getElapsedSeconds() * 0.1f;
+
+    vec3 perlin_vec(nX, nY, nZ);
+    return perlin.fBm(perlin_vec);
+}
+
+
+Distortion Particle::distort(
+        const vec2  &loc,
+        const vec2  &relativeLoc,
+        const float &noise,
+        const vec2  &boundary)
+{
+    // time and distance used to attenuate the wave motion
+    float time = float(app::getElapsedSeconds()) * 4.0f;
+    float dist = length(relativeLoc) * 0.05f;
+    float sin_offset = 50.0f * sinf(0.20f * (dist - time));
+    vec2 loc_offset = mLoc + mDirToCursor * sin_offset;
+
+    // constraint the offsets to the canvas
+    loc_offset.x = constrain(loc_offset.x, 0.0f, boundary.x);
+    loc_offset.y = constrain(loc_offset.y, 0.0f, boundary.y);
+
+    float angle = noise * 15.0f;
+    vec2 perlin_offset = vec2(cosf(angle), sinf(angle));
+
+    return {
+        loc_offset,
+        perlin_offset,
+    };
+
 }

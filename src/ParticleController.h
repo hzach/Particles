@@ -1,6 +1,7 @@
 #ifndef PARTICLECONTROLLER_H
 #define PARTICLECONTROLLER_H
 #include "cinder/app/App.h"
+#include "cinder/Perlin.h"
 #include "Particle.h"
 #include <list>
 
@@ -37,12 +38,16 @@ class ParticleController {
 
         int mSpacing;
 
+        Perlin mPerlin;
+
         Channel32f mChannel;
 
         /**
         * This list of Particles managed by this controller.
         */
         std::list<Particle> mParticles;
+
+        float current_noise_value(const vec2 &loc);
 };
 
 

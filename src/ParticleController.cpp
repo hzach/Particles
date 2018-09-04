@@ -9,7 +9,8 @@ using namespace ci::app;
 
 ParticleController::ParticleController(Channel32f channel) :
   mChannel(std::move(channel)),
-  mSpacing(1)
+  mSpacing(1),
+  mPerlin()
 {}
 
 
@@ -34,7 +35,7 @@ void ParticleController::update(const vec2 mouseLoc) {
       if (it->mIsDead) {
           it = mParticles.erase(it);
       } else {
-          it->update(mChannel, mouseLoc);
+          it->update(mChannel, mouseLoc, mPerlin);
           ++it;
       }
   }
