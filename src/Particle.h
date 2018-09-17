@@ -18,8 +18,12 @@ struct Distortion {
     vec2 perlin_offset;
 };
 
+
 class Particle {
   public:
+    cinder::vec2 mLoc;
+    cinder::vec2 mAcc;
+    float mMass;
 
     Particle(vec2 loc, vec2 vel);
 
@@ -34,7 +38,6 @@ class Particle {
     bool mIsDead;
 
   private:
-    cinder::vec2 mLoc;
     cinder::vec2 mVel;
 
     float mDecay;

@@ -47,7 +47,7 @@ class ParticleController {
         */
         std::list<Particle> mParticles;
 
-        float current_noise_value(const vec2 &loc);
+        void repelParticles();
 };
 
 

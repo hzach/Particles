@@ -12,11 +12,13 @@ Particle::Particle(vec2 loc, vec2 vel) :
     mScale(7.0f),
     mDecay(Rand::randFloat(0.15f, .19f)),
     mVel(vel),
+    mAcc(Rand::randVec2()),
     mAge(0)
 {
   mLoc = loc;
   mDir = Rand::randVec2();
   mRad = mRad_initial;
+  mMass = mRad * mRad * 0.005f;
 }
 
 
@@ -37,9 +39,14 @@ void Particle::update(const Channel32f &channel, const vec2 &mouseLoc, const Per
     );
 
     // update location with the particles velocity
-    mLoc += mVel;
-    mVel += offsets.perlin_offset * mDecay;
 
+    float speed = length(mVel);
+    if (speed < 0.25f) {
+        mVel -= mAcc;
+    }
+    mLoc += mVel;
+    mVel += offsets.perlin_offset * mDecay * (1.0f -  mAge/(float)mLifespan);
+    mAcc = vec2(0,0);
     // apply the distortion and attenuate by the age of the Particle
     mRad = channel.getValue(offsets.loc_offset) * mRad_initial * (1.0f - mAge/(float)mLifespan);
 
